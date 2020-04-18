@@ -7,8 +7,18 @@ def traverse(goal_state, prev):
     (goal_state, None)
     '''
     result = [(goal_state, None)]
-    # remove the following line and complete the algorithm
-    assert False
+    cur_state = goal_state
+    nxt_state = prev[goal_state.to_string()]
+    actions = nxt_state.get_actions()
+    while nxt_state:
+        actions = nxt_state.get_actions()
+        for a in actions:
+            if nxt_state.apply_action(a).is_same(cur_state):
+                result.append((nxt_state, a))
+                cur_state = nxt_state
+                nxt_state = prev[nxt_state.to_string()]
+                break
+
     return result
 
 

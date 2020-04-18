@@ -28,8 +28,21 @@ def dijkstra(puzzle):
     prev = {initial.to_string(): None}
 
     while len(fringe) > 0:
-        # remove the following line and complete the algorithm
-        assert False
+        dist, current = heapq.heappop(fringe)
+
+        concluded.add(current.to_string())
+        if current.is_same(goal):
+            break
+
+        actions = current.get_actions()
+        for a in actions:
+            nxt = current.apply_action(a)
+            if nxt.to_string() in concluded:
+                continue
+            prev[nxt.to_string()] = current
+            distances[nxt.to_string()] = dist+1
+            heapq.heappush(fringe, (dist+1, nxt))
+
     return prev
 
 
