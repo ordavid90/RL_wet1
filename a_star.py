@@ -3,6 +3,13 @@ from planning_utils import *
 import heapq
 import datetime
 
+def incorrect_t(goal,current):
+    num_incor = 0
+    for i in range(1,9):
+        if goal._get_location_char(str(i)) != current._get_location_char(str(i)):
+            num_incor+=1
+
+    return num_incor
 
 def a_star(puzzle):
     '''
@@ -13,7 +20,7 @@ def a_star(puzzle):
 
     # general remark - to obtain hashable keys, instead of using State objects as keys, use state.as_string() since
     # these are immutable.
-
+    alpha = 1
     initial = puzzle.start_state
     goal = puzzle.goal_state
 
@@ -44,7 +51,7 @@ def a_star(puzzle):
                 continue
             prev[nxt.to_string()] = current
             re_dist = distances[current.to_string()]+1
-            heu_dist = current.get_manhattan_distance(goal)
+            heu_dist = current.incorrect_t(goal) * alpha
             distances[nxt.to_string()] = re_dist
             heapq.heappush(fringe, (heu_dist + re_dist, nxt))
 
@@ -54,6 +61,7 @@ def a_star(puzzle):
 def solve(puzzle):
     # compute mapping to previous using dijkstra
     prev_mapping = a_star(puzzle)
+    print("amount of states is: ", len(prev_mapping))
     # extract the state-action sequence
     plan = traverse(puzzle.goal_state, prev_mapping)
     print_plan(plan)
